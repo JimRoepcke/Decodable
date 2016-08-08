@@ -53,7 +53,7 @@ indirect enum Decodable {
     func decodeClosure(provider: TypeNameProvider) -> String {
         switch self {
         case T(let key):
-            return "\(provider[key]).decode"
+            return "\(provider[key]).decodeJSON"
             //        case .AnyObject:
         //            return "{$0}"
         case Optional(let T):

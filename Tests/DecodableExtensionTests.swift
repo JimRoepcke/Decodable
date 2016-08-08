@@ -16,7 +16,7 @@ class DecodableExtensionTests: XCTestCase {
         //given
         let anyObject = "hello"
         //when
-        let string = try! String.decode(anyObject)
+        let string = try! String.decodeJSON(anyObject)
         //then
         XCTAssertEqual(string, anyObject)
     }
@@ -26,7 +26,7 @@ class DecodableExtensionTests: XCTestCase {
         let anyObject = 0
         //when
         do {
-            try String.decode(anyObject)
+            try String.decodeJSON(anyObject)
         } catch is TypeMismatchError {
             //then
             XCTAssertTrue(true)
@@ -40,7 +40,7 @@ class DecodableExtensionTests: XCTestCase {
         //given
         let anyObject = 0
         //when
-        let int = try! Int.decode(anyObject)
+        let int = try! Int.decodeJSON(anyObject)
         //then
         XCTAssertEqual(int, anyObject)
     }
@@ -50,7 +50,7 @@ class DecodableExtensionTests: XCTestCase {
         let anyObject = ""
         //when
         do {
-            try Int.decode(anyObject)
+            try Int.decodeJSON(anyObject)
         } catch is TypeMismatchError {
             //then
             XCTAssertTrue(true)
@@ -64,7 +64,7 @@ class DecodableExtensionTests: XCTestCase {
         //given
         let anyObject = 0.5
         //when
-        let double = try! Double.decode(anyObject)
+        let double = try! Double.decodeJSON(anyObject)
         //then
         XCTAssertEqual(double, anyObject)
     }
@@ -74,7 +74,7 @@ class DecodableExtensionTests: XCTestCase {
         let anyObject = ""
         //when
         do {
-            try Double.decode(anyObject)
+            try Double.decodeJSON(anyObject)
         } catch is TypeMismatchError {
             //then
             XCTAssertTrue(true)
@@ -88,7 +88,7 @@ class DecodableExtensionTests: XCTestCase {
         //given
         let anyObject = true
         //when
-        let bool = try! Bool.decode(anyObject)
+        let bool = try! Bool.decodeJSON(anyObject)
         //then
         XCTAssertEqual(bool, anyObject)
     }
@@ -98,7 +98,7 @@ class DecodableExtensionTests: XCTestCase {
         let anyObject = ""
         //when
         do {
-            try Bool.decode(anyObject)
+            try Bool.decodeJSON(anyObject)
         } catch is TypeMismatchError {
             //then
             XCTAssertTrue(true)

@@ -11,7 +11,7 @@ import Foundation
 /// Use reduce to traverse through a nested dictionary and find the object at a given path
 func parse(json: AnyObject, _ path: [String]) throws -> AnyObject {
     return try path.reduce((json, []), combine: { (a:(object: AnyObject, currentPath: [String]), key: String) in
-        let currentDict = try NSDictionary.decode(a.object)
+        let currentDict = try NSDictionary.decodeJSON(a.object)
         guard let result = currentDict[NSString(string: key)] else {
             var error = MissingKeyError(key: key, object: currentDict)
             error.path = a.currentPath

@@ -12,7 +12,7 @@ import XCTest
 private struct Color: Decodable {
     let name: String
     
-    private static func decode(json: AnyObject) throws -> Color {
+    private static func decodeJSON(json: AnyObject) throws -> Color {
         return try Color(name: json => "name")
     }
 }
@@ -21,7 +21,7 @@ private struct Apple: Decodable {
     let id: Int
     let color: Color?
     
-    private static func decode(json: AnyObject) throws -> Apple {
+    private static func decodeJSON(json: AnyObject) throws -> Apple {
         return try Apple(id: json => "id", color: json => "color")
     }
 }
@@ -29,7 +29,7 @@ private struct Apple: Decodable {
 private struct Tree: Decodable {
     let apples: [Apple]
     
-    private static func decode(json: AnyObject) throws -> Tree {
+    private static func decodeJSON(json: AnyObject) throws -> Tree {
         return try Tree(apples: json => "apples")
     }
 }
@@ -53,7 +53,7 @@ class ErrorPathTests: XCTestCase {
     func testNestedUnexpectedNSNull() {
         let dict: NSDictionary = ["id": 1, "color": ["name": NSNull()]]
         do {
-            let apple = try Apple.decode(dict)
+            let apple = try Apple.decodeJSON(dict)
             print(apple)
             XCTFail()
         } catch let error as TypeMismatchError where error.object is NSNull {
@@ -83,7 +83,7 @@ class ErrorPathTests: XCTestCase {
             ["id": 2, "color": ["name": "green"]],
             ["id": 2, "color": ["name": 3]]]]
         do {
-            try Tree.decode(dict)
+            try Tree.decodeJSON(dict)
             XCTFail()
         } catch let error as TypeMismatchError {
             XCTAssertEqual(String(error.receivedType), "__NSCFNumber")

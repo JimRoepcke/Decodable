@@ -33,7 +33,7 @@ extension UInt8: NSNumberCastable {
     public static func convertFrom(n: NSNumber) -> UInt8 { return n.unsignedCharValue }
 }
 
-/// Provides a default implementation of decode() which casts the object to a NSValue and unsafely casts its value as Self.
+/// Provides a default implementation of decodeJSON() which casts the object to a NSValue and unsafely casts its value as Self.
 public protocol NSValueCastable: Decodable {}
 
 /// Used to enable decoding to different IntegerTypes from NSNumber.
@@ -43,7 +43,7 @@ public protocol NSNumberCastable: NSValueCastable {
 
 extension NSValueCastable {
     private typealias PointerOfSelf = UnsafeMutablePointer<Self> // Why do we have to do this?
-    public static func decode(j: AnyObject) throws -> Self {
+    public static func decodeJSON(j: AnyObject) throws -> Self {
         guard let value = j as? NSValue else {
             throw TypeMismatchError(expectedType: NSValue.self, receivedType: j.dynamicType, object: j)
         }
@@ -56,7 +56,7 @@ extension NSValueCastable {
 }
 
 extension NSNumberCastable {
-    public static func decode(j: AnyObject) throws -> Self {
+    public static func decodeJSON(j: AnyObject) throws -> Self {
         guard let value = j as? NSNumber else {
             throw TypeMismatchError(expectedType: NSNumber.self, receivedType: j.dynamicType, object: j)
         }

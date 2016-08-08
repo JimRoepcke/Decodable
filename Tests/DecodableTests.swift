@@ -24,7 +24,7 @@ class DecodableTests: XCTestCase {
         
         // when
         do {
-            let repository = try Repository.decode(json)
+            let repository = try Repository.decodeJSON(json)
             // then
             XCTAssertEqual(repository.id, json["id"] as? Int)
             XCTAssertEqual(repository.name, json["name"] as? String)
@@ -60,7 +60,7 @@ class DecodableTests: XCTestCase {
         var result: [Repository] = []
         measureBlock {
             do {
-                result = try [Repository].decode(array)
+                result = try [Repository].decodeJSON(array)
             } catch let error {
                 XCTFail("\(error)")
             }
@@ -130,7 +130,7 @@ class DecodableTests: XCTestCase {
         
         // when
         do {
-            try Repository.decode(json)
+            try Repository.decodeJSON(json)
         } catch let error as MissingKeyError {
             // then
             XCTAssertEqual(error.key, "id")
@@ -147,7 +147,7 @@ class DecodableTests: XCTestCase {
         
         // when
         do {
-            try Repository.decode(json)
+            try Repository.decodeJSON(json)
         } catch is MissingKeyError {
             XCTFail("it should not throw this exception")
         } catch let error as TypeMismatchError where error.expectedType == Int.self {
@@ -164,7 +164,7 @@ class DecodableTests: XCTestCase {
         
         // when
         do {
-            try parse(json, path: ["key"], decode: Repository.decode)
+            try parse(json, path: ["key"], decode: Repository.decodeJSON)
         } catch is MissingKeyError {
             XCTFail("it should not throw this exception")
         } catch let error as TypeMismatchError where error.expectedType == Int.self {
@@ -182,7 +182,7 @@ class DecodableTests: XCTestCase {
         
         // when
         do {
-            try Repository.decode(jsonString)
+            try Repository.decodeJSON(jsonString)
         } catch is MissingKeyError {
             XCTFail("it should not throw this exception")
         } catch let error as TypeMismatchError where error.expectedType == NSDictionary.self {

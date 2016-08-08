@@ -23,7 +23,7 @@ struct Repository {
 }
 
 extension Repository: Decodable {
-    static func decode(j: AnyObject) throws -> Repository {
+    static func decodeJSON(j: AnyObject) throws -> Repository {
         return try Repository(
                     name: j => "nested" => "name", 
                     description: j => "description", 
@@ -38,7 +38,7 @@ extension Repository: Decodable {
 
 do {
     let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
-    let repo = try [Repository].decode(json)
+    let repo = try [Repository].decodeJSON(json)
 } catch {
     print(error)
 }
@@ -60,7 +60,7 @@ do {
 ### A protocol
 ```swift
 public protocol Decodable {
-    static func decode(json: AnyObject) throws -> Self
+    static func decodeJSON(json: AnyObject) throws -> Self
 }
 ```
 ### A parse-function
@@ -136,8 +136,8 @@ For example you could...
 - Make your own protocols!
 - Create your own throwing decode-functions, e.g for `NSDate`, or convenience-extensions with your own date-formatter.
 ```swift
-public class func decode(json: AnyObject) throws -> Self {
-        let string = try String.decode(json)
+public class func decodeJSON(json: AnyObject) throws -> Self {
+        let string = try String.decodeJSON(json)
 
         guard let date = ISO8601DateFormatter.dateFromString(string) else {
             throw NSDateDecodingError.InvalidStringFormat
