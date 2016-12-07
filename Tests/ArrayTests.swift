@@ -135,7 +135,59 @@ class DecodableArrayTests: XCTestCase {
         // then
         XCTAssertEqual(array, ["A", "B"])
     }
-    
+
+    func testDecodeArrayOnInvalidObjectsClosure() {
+        // given
+        let value: AnyObject = ["A", 2, "B"]
+        // when
+        let reportOnInvalidObject: DecodeArrayInvalidObjectReporter = {
+            switch $0 {
+            case is Int:
+                break
+            default:
+                XCTFail("expected invalid value to be an Int")
+            }
+            switch $1 {
+            case is TypeMismatchError:
+                break
+            default:
+                XCTFail("expected TypeMismatchError for non-String value decoding Strings")
+            }
+        }
+        // then
+        do {
+            _ = try [String].decode(value, onInvalidObject: reportOnInvalidObject)
+            XCTFail()
+        } catch is TypeMismatchError {
+
+        } catch {
+            XCTFail("expected TypeMismatchError for non-String value decoding Strings")
+        }
+    }
+
+    func testDecodeSafeArrayOnInvalidObjectsClosure() {
+        // given
+        let value: AnyObject = ["A", 2, "B"]
+        // when
+        let reportOnInvalidObject: DecodeArrayInvalidObjectReporter = {
+            switch $0 {
+            case is Int:
+                break
+            default:
+                XCTFail("expected invalid value to be an Int")
+            }
+            switch $1 {
+            case is TypeMismatchError:
+                break
+            default:
+                XCTFail("expected TypeMismatchError for non-String value decoding Strings")
+            }
+        }
+        let array = try! [String].decode(value, ignoreInvalidObjects: true, onInvalidObject: reportOnInvalidObject)
+        // then
+        XCTAssertEqual(array, ["A", "B"])
+    }
+
     func testDecodeSafeArrayCatchTypeMismatchExceptionInObjects() {
         // given
         let key = "key"
