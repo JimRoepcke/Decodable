@@ -36,12 +36,34 @@ extension Dictionary where Key: Decodable, Value: Decodable {
     }
 }
 
+public typealias DecodeArrayInvalidObjectReporter = (AnyObject, ErrorType) -> Void
+
 extension Array where Element: Decodable {
-    public static func decode(j: AnyObject, ignoreInvalidObjects: Bool = false) throws -> [Element] {
+    public static func decode(j: AnyObject, ignoreInvalidObjects: Bool = false, onInvalidObject callback: DecodeArrayInvalidObjectReporter? = nil) throws -> [Element] {
         if ignoreInvalidObjects {
-            return try decodeArray { try? Element.decode($0) }(json: j).flatMap {$0}
+            guard let callback = callback else {
+                return try decodeArray { try? Element.decode($0) }(json: j).flatMap {$0}
+            }
+            return try decodeArray {
+                do {
+                    return try Element.decode($0)
+                } catch {
+                    callback($0, error)
+                    return nil
+                }
+            }(json: j).flatMap {$0}
         } else {
-            return try decodeArray(Element.decode)(json: j)
+            guard let callback = callback else {
+                return try decodeArray(Element.decode)(json: j)
+            }
+            return try decodeArray {
+                do {
+                    return try Element.decode($0)
+                } catch {
+                    callback($0, error)
+                    throw error
+                }
+            }(json: j)
         }
     }
 }
